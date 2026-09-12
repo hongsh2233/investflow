@@ -24,7 +24,7 @@ from app import models
 from app.utils import verify_token
 
 # 루트 .env.local 우선 로드 (config/engine과 동일)
-_root = Path(__file__).resolve().parent.parent.parent.parent  # jurin-i 루트
+_root = Path(__file__).resolve().parent.parent.parent.parent  # flow 루트
 _env_local = _root / ".env.local"
 if _env_local.exists():
     load_dotenv(dotenv_path=_env_local)

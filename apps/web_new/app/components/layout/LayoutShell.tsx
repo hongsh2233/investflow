@@ -11,7 +11,6 @@ import { PageBottomBanner } from "../module/home/PageBottomBanner";
 import FloatingButtons from "../module/FloatingButtons";
 import PinLockScreen from "../ui/PinLockScreen";
 import { isPinSet } from "@/lib/utils/pin";
-import { AppDownloadModal } from "../module/AppDownloadModal";
 
 const AUTH_ROUTES = ["/login", "/signup"];
 const LAST_LOGIN_KEY = "lastLoginProvider";
@@ -58,7 +57,6 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       {!isAuthPage && <Footer />}
       {!isAuthPage && <FloatingButtons />}
       {!isAuthPage && <BottomNavigation />}
-      <AppDownloadModal />
     </div>
   );
 }

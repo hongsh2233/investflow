@@ -1,8 +1,6 @@
 [
-  {"id":"home","label":"홈","href":"/","headerTitle":"안녕하세요, 투자자님!","headerSubtitle":"오늘도 현명한 투자 되세요!"},
-  {"id":"search","label":"검색","href":"/search","headerTitle":"검색","headerSubtitle":"종목 검색·상세 정보"},
-  {"id":"briefing","label":"뉴스/시황","href":"/briefing","headerTitle":"뉴스/시황","headerSubtitle":"뉴스와 시황이 통합된 정보 허브"},
-  {"id":"stocks","label":"추천","href":"/stocks","headerTitle":"추천","headerSubtitle":"추천·관심·시총·등락"},
-  {"id":"calendar","label":"캘린더","href":"/calendar","headerTitle":"일정 캘린더","headerSubtitle":"중요한 주식 일정을 놓치지 마세요"},
-  {"id":"settings","label":"설정","href":"/settings","headerTitle":"설정","headerSubtitle":"앱을 내 마음대로 설정하세요"}
+  {"id":"fortune","label":"투자운세","href":"/fortune","headerTitle":"투자운세","headerSubtitle":"오늘의 투자 기운을 확인하세요"},
+  {"id":"news","label":"뉴스","href":"/news","headerTitle":"뉴스","headerSubtitle":"주식 뉴스와 시황 정보"},
+  {"id":"watchlist","label":"관심종목","href":"/watchlist","headerTitle":"관심종목","headerSubtitle":"즐겨찾기 종목 모아보기"},
+  {"id":"masters","label":"대가들의 한마디","href":"/masters","headerTitle":"대가들의 한마디","headerSubtitle":"투자 대가들의 명언"}
 ]

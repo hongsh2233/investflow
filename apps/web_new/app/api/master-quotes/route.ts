@@ -8,13 +8,7 @@ import { API_BASE_URL, API_SECRET_KEY } from "@/lib/config/api";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") ?? undefined;
-    const guestId = searchParams.get("guest_id") ?? undefined;
-
-    const params = new URLSearchParams();
-    if (email) params.set("email", email);
-    if (guestId) params.set("guest_id", guestId);
-    const qs = params.toString();
+    const qs = searchParams.toString();
 
     const headers: Record<string, string> = {
       "Content-Type": "application/json",

@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 
 # 프로젝트 디렉토리: admin (BASE_DIR), 모노레포 루트 (ROOT)
 BASE_DIR = Path(__file__).resolve().parent.parent
-ROOT = BASE_DIR.parent.parent  # jurin-i 루트
+ROOT = BASE_DIR.parent.parent  # flow 루트
 
 # 업로드 파일 루트 (빌드/실행 경로와 무관하게 동일한 경로 사용 → 이미지 엑박 방지)
 UPLOADS_DIR = BASE_DIR / "uploads"
@@ -56,12 +56,12 @@ AUTH_COOKIE_NAME = os.environ.get("AUTH_COOKIE_NAME", "bo_session_id")  # 인증
 SECRET_TOKEN = os.environ.get("SECRET_TOKEN")  # 세션 인증 토큰
 
 # 하드코딩 제거: 프로덕션에서는 환경 변수 필수. 개발 환경에서만 임시 토큰 허용
-_IS_PRODUCTION = bool(os.environ.get("RAILWAY_ENVIRONMENT"))
+_IS_PRODUCTION = os.environ.get("APP_ENV", "").lower() == "production"
 if not SECRET_TOKEN:
     if _IS_PRODUCTION:
         raise RuntimeError(
             "SECRET_TOKEN이 설정되지 않았습니다. "
-            "Railway Variables에서 설정하세요. "
+            "서버 환경 변수(APP_ENV=production)에서 SECRET_TOKEN을 설정하세요. "
             "예: SECRET_TOKEN=$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
         )
     import secrets
@@ -82,7 +82,7 @@ OPENDART_API_KEY = os.environ.get("OPENDART")  # Open DART 인증키 (40자리)
 
 # Google Gemini API (관리자 스케줄·요약 전반)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-# google-genai generate_content 모델명 (필요 시 Railway 등에서 GEMINI_MODEL 로 덮어쓰기)
+# google-genai generate_content 모델명 (필요 시 환경 변수로 덮어쓰기)
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
 # 네이버 검색 API 설정 (뉴스 검색)

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const SITE_NAME = "플로우";
 
 export const SITE_DESCRIPTION =
-  "초보 투자자를 위한 주식·시장 정보 서비스. 브리핑, 일정, 관심 종목, 커뮤니티를 모바일에서 간편하게 이용하세요.";
+  "투자자를 위한 운세·뉴스·관심종목 앱. 투자운세, 주식뉴스, 관심종목 관리를 모바일에서 간편하게 이용하세요.";
 
 const DEFAULT_KEYWORDS = [
   "플로우",

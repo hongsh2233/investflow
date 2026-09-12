@@ -1,18 +1,14 @@
 /**
- * 하단 네비게이션 등 앱 전역에서 쓰는 링크/메뉴는 config에서 불러옵니다.
+ * 하단 네비게이션 — v2 4탭: 투자운세 / 뉴스 / 관심종목 / 대가들의 한마디
  * 데이터: config/nav-items.json
- *
- * 수급(/market) 페이지는 유지하되 하단 탭에서는 제외했습니다.
  */
-import Home from '@mui/icons-material/Home'
-import CalendarToday from '@mui/icons-material/CalendarToday'
 import Article from '@mui/icons-material/Article'
-import Search from '@mui/icons-material/Search'
 import AutoAwesome from '@mui/icons-material/AutoAwesome'
-import Settings from '@mui/icons-material/Settings'
+import Star from '@mui/icons-material/Star'
+import FormatQuote from '@mui/icons-material/FormatQuote'
 import navData from './nav-items.json'
 
-type IconComponent = typeof Home
+type IconComponent = typeof Article
 
 interface NavItemData {
   id: string
@@ -23,12 +19,10 @@ interface NavItemData {
 }
 
 const iconMap: Record<string, IconComponent> = {
-  home: Home,
-  search: Search,
-  briefing: Article,
-  stocks: AutoAwesome,
-  calendar: CalendarToday,
-  settings: Settings,
+  fortune: AutoAwesome,
+  news: Article,
+  watchlist: Star,
+  masters: FormatQuote,
 }
 
 export interface NavItem {
@@ -40,10 +34,7 @@ export interface NavItem {
   headerSubtitle: string
 }
 
-// 'calendar' 탭은 하단 메뉴에서 임시 제외
-export const navItems: NavItem[] = (navData as NavItemData[])
-  .filter((item) => item.id !== 'calendar')
-  .map((item) => ({
-    ...item,
-    icon: iconMap[item.id] ?? Home,
-  }))
+export const navItems: NavItem[] = (navData as NavItemData[]).map((item) => ({
+  ...item,
+  icon: iconMap[item.id] ?? AutoAwesome,
+}))

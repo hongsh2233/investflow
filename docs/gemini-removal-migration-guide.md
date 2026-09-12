@@ -1,12 +1,36 @@
 # Gemini 제거 & 재활성화 마이그레이션 가이드
 
-**상태**: 🔴 완료 (2026-07-08)  
-**목적**: Phase 1-2 개발 기간 동안 월 $80-100 비용 절감  
-**기간**: 6-9개월 예상 (Phase 1-2 완료 후 재활성화)
+**상태**: 🔴 완료 (1차: 2026-07-08 / 2차 전면 차단: 2026-08-03)  
+**목적**: 비용 절감 (월 $120-140 추정)  
+**재활성화**: AI 구독 수익 모델 확립 후 선별 재활성화 예정  
+**아카이브 위치**: `archive/gemini-services/` (C안 마이그레이션 시 이동 예정)
 
 ---
 
 ## 📋 제거된 기능 목록
+
+### [2026-08-03 추가 차단] 헬퍼 함수 레벨 전면 차단 (10건)
+
+기존 1차 제거(2026-07-08)는 주요 함수(generate_*)를 주석처리했으나, 헬퍼 함수 레벨에서 여전히 Gemini를 호출하는 코드가 남아 있어 실제 청구가 발생. 2026-08-03에 조기 `return None/""` 추가로 완전 차단.
+
+| 파일 | 함수 | 차단 패턴 |
+|------|------|----------|
+| `services/target_price_news_service.py` | `_process_with_gemini()` | `return None` |
+| `services/sentiment_analysis_service.py` | `_call_gemini_sentiment()` | `return None` |
+| `services/market_voice_service.py` | `_summarize_with_gemini()` | `return None` |
+| `services/investment_bank_news_service.py` | `_translate_with_gemini()` | `return None` |
+| `services/daily_fortune_gemini_service.py` | `_call_gemini()` | `return ""` |
+| `services/daily_issue_gemini_service.py` | `_call_gemini()` | `return None` |
+| `services/supply_summary_gemini_service.py` | `_call_gemini()` | `return None` |
+| `services/market_closing_gemini_service.py` | `_call_gemini()` | `return None` |
+| `app/api/mbti-investment-advice/route.ts` | `POST` 핸들러 | 503 응답 |
+| `app/api/jubti-strategy/route.ts` | `POST` 핸들러 | 503 응답 |
+
+마커: `# [2026-08-03 Gemini 제거] 비용 절감 — 모든 Gemini 호출 차단`
+
+---
+
+### [2026-07-08 1차 제거] 주요 함수 주석처리 (5건)
 
 ### 1. 오늘의 띠/별자리 운세 생성 (Daily Fortune)
 

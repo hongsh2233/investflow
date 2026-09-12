@@ -1,7 +1,0 @@
-{
-  "name": "@jurin-i/ui",
-  "version": "0.0.1",
-  "private": true,
-  "main": "index.js",
-  "description": "B단/C단 공통 UI 컴포넌트 (추후 공유 컴포넌트 추가)"
-}

@@ -20,7 +20,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # .env 로드: 1) 루트 .env.local, 2) apps/admin/.env
 _admin_dir = Path(__file__).resolve().parent.parent.parent  # apps/admin
-_root = _admin_dir.parent.parent  # jurin-i 루트
+_root = _admin_dir.parent.parent  # flow 루트
 _env_local = _root / ".env.local"
 _env_file = _admin_dir / ".env"
 if _env_local.exists():
@@ -100,22 +100,24 @@ if _raw_url and _raw_url.strip():
             _raw_url = urlunparse(parsed)
             print(f"⚠️ 경고: DATABASE_URL에 포트가 없어서 기본 포트({port})를 추가했습니다.")
         
-        # Railway URL인 경우 SSL 모드 추가 (없으면)
-        if ("rlwy.net" in _raw_url or "railway.app" in _raw_url) and "sslmode=" not in _raw_url:
+        # DB_SSL=true 환경 변수로 SSL 적용 여부 제어
+        _use_ssl = os.getenv("DB_SSL", "false").strip().lower() in ("1", "true", "yes")
+        if _use_ssl and "sslmode=" not in _raw_url:
             separator = "&" if "?" in _raw_url else "?"
             _raw_url = f"{_raw_url}{separator}sslmode=require"
-        
+
         SQLALCHEMY_DATABASE_URL = _raw_url
     except Exception as e:
         print(f"⚠️ 경고: DATABASE_URL 파싱 중 오류 ({e}). DB_* 변수를 사용합니다.")
+        _use_ssl = os.getenv("DB_SSL", "false").strip().lower() in ("1", "true", "yes")
         _base = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        SQLALCHEMY_DATABASE_URL = f"{_base}?sslmode=require" if "rlwy.net" in str(DB_HOST) or "railway.app" in str(DB_HOST) else _base
+        SQLALCHEMY_DATABASE_URL = f"{_base}?sslmode=require" if _use_ssl else _base
 else:
+    _use_ssl = os.getenv("DB_SSL", "false").strip().lower() in ("1", "true", "yes")
     _base = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    SQLALCHEMY_DATABASE_URL = f"{_base}?sslmode=require" if "rlwy.net" in str(DB_HOST) or "railway.app" in str(DB_HOST) else _base
+    SQLALCHEMY_DATABASE_URL = f"{_base}?sslmode=require" if _use_ssl else _base
 
-# 연결 풀: 기본값은 동시 API(웹 프록시) 폭주에 취약한 SQLAlchemy 기본(5+10)보다 넉넉히 둠.
-# Railway 등에서도 보통 Postgres max_connections 여유가 있으면 DB_POOL_SIZE / DB_MAX_OVERFLOW 로 조절.
+# 연결 풀: DB_POOL_SIZE / DB_MAX_OVERFLOW / DB_POOL_TIMEOUT 환경 변수로 조절 가능.
 def _int_env(name: str, default: int) -> int:
     try:
         v = int(os.getenv(name, str(default)))

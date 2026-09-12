@@ -271,7 +271,7 @@ async def login_page(request: Request):
         <head>
           <meta charset="UTF-8"/>
           <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-          <title>Jurin-i BO - 오류</title>
+          <title>Flow BO - 오류</title>
           <link rel="icon" href="/static/image/favicon.svg" type="image/svg+xml" />
           <style>
             @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
@@ -312,7 +312,7 @@ async def login_page(request: Request):
       <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
       <meta name="googlebot" content="noindex, nofollow" />
       <meta name="description" content="관리자 로그인 (비공개)" />
-      <title>Jurin-i BO - 로그인</title>
+      <title>Flow BO - 로그인</title>
       <link rel="icon" href="/static/image/favicon.svg" type="image/svg+xml" />
       <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
@@ -531,7 +531,7 @@ async def login_page(request: Request):
               <path d="M6 20v-4"/>
             </svg>
           </div>
-          <h1>Jurin-i BO</h1>
+          <h1>Flow BO</h1>
           <p>Back Office Management</p>
         </div>
 
@@ -572,7 +572,7 @@ async def login_page(request: Request):
 
         <!-- 푸터 -->
         <div class="login-footer">
-          <p>&copy; Jurin-i BO &middot; 관리자 전용</p>
+          <p>&copy; Flow BO &middot; 관리자 전용</p>
         </div>
       </div>
 

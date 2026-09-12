@@ -11,29 +11,38 @@
 | 영역 | 기술 |
 |------|------|
 | Frontend | Next.js 16 + React 19 + TypeScript |
-| Backend | FastAPI + SQLAlchemy + PostgreSQL |
+| Backend | FastAPI + SQLAlchemy + PostgreSQL (→ C안 전환 후 Next.js BFF + Prisma) |
 | Mobile | Capacitor 7 (Android APK) |
-| AI | Google Gemini, Anthropic Claude |
+| AI | Google Gemini (🔴 전면 차단 2026-08-03), Anthropic Claude |
 | Push | Firebase Cloud Messaging (FCM) |
 | State | Zustand |
-| Auth | NextAuth (Google/Naver OAuth), JWT |
-| Scheduler | APScheduler |
+| Auth | NextAuth (Google OAuth), JWT |
+| Scheduler | APScheduler (Python) |
 | UI | Tailwind CSS, MUI, Lucide Icons |
+| 배포 | Ubuntu 물리 서버 (i7/16GB) + Docker Compose + Nginx Proxy Manager + Cloudflare Tunnel |
+| CI/CD | GitHub Actions → SSH 배포 (예정) |
 
 ---
 
 ## 모노레포 구조
 
 ```
-Jurin-i/
+Jurin-i/                         ← 현재 구조
 ├── apps/
-│   ├── web_new/          # Next.js 프론트엔드 (사용자향)
-│   └── admin/            # FastAPI 백엔드 (관리자 + API)
+│   ├── web_new/          # Next.js 프론트엔드 (사용자향)  →  apps/web/ 로 이전 예정
+│   └── admin/            # FastAPI 백엔드 (관리자 + API)  →  apps/scheduler/ 로 분리 예정
 ├── packages/
-│   ├── database/         # Prisma 스키마
-│   └── ui/               # 공유 UI 컴포넌트
+│   ├── database/         # Prisma 스키마  →  apps/web/prisma/ 로 이동 예정
+│   └── ui/               # 공유 UI 컴포넌트 (내용 없음, 삭제 예정)
+├── archive/              # Gemini 코드 아카이브 (C안 마이그레이션 시 생성)
 └── docs/                 # 프로젝트 문서
+
+# C안 전환 후 목표 구조:
+# apps/web/        ← Next.js (BFF: Server Actions + Prisma 직접 접근)
+# apps/scheduler/  ← Python 전담 (스케줄러 + BO 대시보드, 내부망 전용)
 ```
+
+> **아키텍처 전환 방향**: `docs/architecture-migration-plan.md` 참조
 
 ---
 
@@ -226,7 +235,7 @@ Jinja2 기반 관리자 페이지: 회원관리, 게시판관리, 배너/팝업�
 | Naver OAuth | Naver Corp (한국) | 소셜 로그인 | ❌ 비활성 |
 | Kakao OAuth | Kakao Corp (한국) | 소셜 로그인 | ❌ 비활성 |
 | Firebase FCM | Google LLC (미국) | 푸시 알림 | ✅ 활성 |
-| Google Gemini 2.5 Flash | Google LLC (미국) | AI 요약·분석 | ✅ 활성 |
+| Google Gemini 2.5 Flash | Google LLC (미국) | AI 요약·분석 | 🔴 전면 차단 (2026-08-03) |
 | Google AdSense | Google LLC (미국) | 광고 수익 (ca-pub-6042624006544756) | ✅ 활성 |
 | Google Tag Manager | Google LLC (미국) | 이용 분석 (GTM-52KM4V3R) | ✅ 활성 |
 | Yahoo Finance | Yahoo Inc (미국) | 국내외 지수, 환율 | ✅ 활성 |
@@ -235,7 +244,7 @@ Jinja2 기반 관리자 페이지: 회원관리, 게시판관리, 배너/팝업�
 | KRX (한국거래소) | KRX (한국) | 시장 데이터 | ✅ 활성 |
 | OpenDART | 금융감독원 (한국) | IPO·공시 정보 | ✅ 활성 |
 | data.go.kr | 공공데이터포털 (한국) | 공휴일 데이터 | ✅ 활성 |
-| Railway | Railway Inc (미국) | 서버·DB 호스팅 | ✅ 활성 |
+| Railway | Railway Inc (미국) | 서버·DB 호스팅 | 🔴 제거 예정 (자체 서버로 이전) |
 | Resend | Resend Inc (미국) | 이메일 발송 | ✅ 활성 |
 | AliExpress 제휴 | Alibaba Group (중국) | 제휴 광고 상품 | ✅ 활성 |
 
@@ -264,7 +273,7 @@ Jinja2 기반 관리자 페이지: 회원관리, 게시판관리, 배너/팝업�
 | API 인증 | X-API-KEY 헤더 |
 | 로그인 실패 제한 | 5회 실패 → 15분 잠금 (IP 기반) |
 | 관리자 세션 | 쿠키 기반, 비활성 10분 / 최대 30분 |
-| HTTPS | Railway 배포 환경 강제 적용 |
+| HTTPS | Cloudflare SSL (자체 서버 Cloudflare Tunnel 경유) |
 
 ## 회원 등급 체계
 
@@ -280,13 +289,13 @@ Jinja2 기반 관리자 페이지: 회원관리, 게시판관리, 배너/팝업�
 
 | 데이터 | 수집 시각 | 소스 |
 |--------|----------|------|
-| 아침 AI 브리핑 | 06:35 | Gemini + Yahoo/Naver |
-| 목표가 상향 뉴스 | 08:30, 12:00 | Naver + Gemini |
+| 아침 AI 브리핑 | 06:35 | Yahoo/Naver (Gemini 차단, AI 요약 비활성) |
+| 목표가 상향 뉴스 | 08:30, 12:00 | Naver (Gemini 파싱 차단, 원문 저장) |
 | 수급 동향 | 08:40~15:40 (30분 간격), 16:40~20:40 (1시간 간격) | Naver 증권 |
-| 일간 이슈 AI 요약 | 08:40, 12:40, 19:40 | Gemini |
+| 일간 이슈 AI 요약 | 08:40, 12:40, 19:40 | 🔴 Gemini 차단으로 비활성 |
 | 주식 영향 뉴스 | 08:30, 12:30, 19:30 | Naver 뉴스 |
 | 종가베팅 스크리닝 | 15:00 | 자체 엔진 |
-| 마감 AI 요약 | 15:50 | Gemini |
+| 마감 AI 요약 | 15:50 | 🔴 Gemini 차단으로 비활성 |
 | 일목균형표 스크리닝 | 20:30 | 자체 엔진 |
 | 코스피/코스닥 지수 | 09:10~15:10 (30분), 15:40 | Yahoo Finance |
 | 해외 지수 | 장전·장중 수회 | Yahoo Finance |
@@ -316,12 +325,12 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8080
 
 # 3. Frontend
-cd apps/web_new
+cd apps/web_new        # C안 이전 후: apps/web
 npm install && npm run dev
 
 # 접속:
 # - 웹앱: http://localhost:3000
-# - API: http://localhost:8080
-# - 관리자: http://localhost:8080/dashboard
-# - API 문서: http://localhost:8080/docs
+# - API: http://localhost:8080  (C안 이전 후 제거)
+# - 관리자(BO): http://localhost:8001  (C안 이전 후 내부망 전용)
+# - API 문서: http://localhost:8080/docs  (C안 이전 후 제거)
 ```

@@ -2026,14 +2026,12 @@ class DailyFortuneScheduler:
             print(f"⚠️ 운세 시작 시 체크 오류: {e}")
 
     async def _generate(self):
-        # [2026-07-08 Gemini 제거] 오늘의 띠/별자리 운세 AI 생성 비활성화 (비용 절감)
-        print("ℹ️ 운세 생성 비활성화 (Gemini 비용 절감 중)")
-        # try:
-        #     from app.services.daily_fortune_gemini_service import generate_daily_fortunes
-        #     result = generate_daily_fortunes()
-        #     print(f"🔮 운세 생성 완료: {result}")
-        # except Exception as e:
-        #     print(f"❌ 운세 스케줄러 오류: {e}")
+        try:
+            from app.services.daily_fortune_gemini_service import generate_daily_fortunes
+            result = generate_daily_fortunes()
+            print(f"🔮 운세 생성 완료: {result}")
+        except Exception as e:
+            print(f"❌ 운세 스케줄러 오류: {e}")
 
     def shutdown(self):
         if self.scheduler:

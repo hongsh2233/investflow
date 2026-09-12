@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import path from "path";
 import fs from "fs";
 
-// 루트(jurin-i) .env.local 로드 — web·admin 공용
+// 루트(flow) .env.local 로드 — web·admin 공용
 // apps/web에서 실행 시 ../../.env.local, 루트에서 실행 시 .env.local
 // dotenv가 없어도 동작하도록 try-catch로 처리
 try {
@@ -39,6 +39,7 @@ try {
 const projectRoot = __dirname;
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   async redirects() {
     return [
       {
