@@ -152,7 +152,7 @@ export default function MastersPage() {
       </div>
 
       {/* 메인 콘텐츠 */}
-      <div style={{ maxWidth: "640px", margin: "0 auto", padding: "1.25rem 1rem" }}>
+      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "1.25rem 1rem" }}>
         {loading ? (
           <div style={{ textAlign: "center", padding: "4rem", color: "var(--app-text-muted)" }}>
             명언을 불러오는 중...
