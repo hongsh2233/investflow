@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ZODIAC_ANIMAL_EMOJI, ZODIAC_SIGN_EMOJI } from "@/lib/utils/zodiacUtils";
 import { getLocalFortune } from "@/lib/data/fortunePool";
+import { MarketIndexBar } from "@/app/components/module/MarketIndexBar";
 
 type FortuneType = "animal" | "zodiac" | "mbti";
 
@@ -44,14 +45,6 @@ const TODAY = new Date().toLocaleDateString("ko-KR", {
 const ANIMALS = ["쥐","소","호랑이","토끼","용","뱀","말","양","원숭이","닭","개","돼지"];
 const SIGNS = ["양자리","황소자리","쌍둥이자리","게자리","사자자리","처녀자리","천칭자리","전갈자리","사수자리","염소자리","물병자리","물고기자리"];
 
-interface IndexData {
-  name: string;
-  value: string;
-  change: string;
-  percent: string;
-  change_num: number;
-}
-
 export default function FortunePage() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<FortuneType>("animal");
@@ -60,7 +53,6 @@ export default function FortunePage() {
   const [fortune, setFortune] = useState<FortuneData | null>(null);
   const [loading, setLoading] = useState(false);
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [indices, setIndices] = useState<IndexData[]>([]);
 
   const member = session?.user as { zodiac_animal?: string; zodiac_sign?: string; mbti_type?: string } | undefined;
   const animal = member?.zodiac_animal || selectedAnimal;
@@ -100,12 +92,6 @@ export default function FortunePage() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    fetch("/api/domestic-indices")
-      .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d?.data?.length) setIndices(d.data); })
-      .catch(() => {});
-  }, []);
 
   function handleAnimalSelect(a: string) {
     setSelectedAnimal(a);
@@ -144,33 +130,7 @@ export default function FortunePage() {
       </div>
 
       {/* 지수 한 줄 */}
-      <div style={{
-        backgroundColor: "var(--app-card-bg)",
-        borderBottom: "1px solid var(--app-border)",
-        padding: "0.5rem 1rem",
-        display: "flex",
-        gap: "1.5rem",
-        fontSize: "0.8rem",
-      }}>
-        {indices.length > 0 ? indices.map((idx) => {
-          const isUp = (idx.change_num ?? 0) >= 0;
-          const arrow = isUp ? "▲" : "▼";
-          const color = isUp ? "var(--app-up)" : "var(--app-down)";
-          return (
-            <span key={idx.name}>
-              {idx.name}{" "}
-              <span style={{ color, fontFamily: "monospace" }}>
-                {arrow} {idx.value} {idx.change} ({idx.percent})
-              </span>
-            </span>
-          );
-        }) : (
-          <>
-            <span style={{ color: "var(--app-text-muted)" }}>KOSPI —</span>
-            <span style={{ color: "var(--app-text-muted)" }}>KOSDAQ —</span>
-          </>
-        )}
-      </div>
+      <MarketIndexBar />
 
       <div style={{ padding: "1rem" }}>
         {/* 유형 탭 */}

@@ -7,6 +7,7 @@ import Favorite from "@mui/icons-material/Favorite";
 import ArrowForwardIos from "@mui/icons-material/ArrowForwardIos";
 import { JUBTI_MASTER_BY_TYPE, MBTI_TO_JUBTI, type JubtiDimension } from "@/lib/jubti/jubtiMasters";
 import { FALLBACK_QUOTES } from "@/lib/data/masterQuotesPool";
+import { MarketIndexBar } from "@/app/components/module/MarketIndexBar";
 
 interface Quote {
   id: number;
@@ -72,6 +73,7 @@ export default function MastersPage() {
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "var(--app-bg)", padding: "0 0 6rem" }}>
+      <MarketIndexBar />
       {/* 내 MBTI 매칭 배너 */}
       {myMaster && (
         <div style={{

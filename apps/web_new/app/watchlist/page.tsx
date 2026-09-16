@@ -1,12 +1,15 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Star from "@mui/icons-material/Star";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
+import { MarketIndexBar } from "@/app/components/module/MarketIndexBar";
 
 export default function WatchlistPage() {
   const { status } = useSession();
+  const router = useRouter();
   const isLoggedIn = status === "authenticated";
 
   return (
@@ -22,6 +25,7 @@ export default function WatchlistPage() {
       }}>
         <h1 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--app-text)" }}>관심종목</h1>
         <button
+          onClick={() => router.push("/search")}
           style={{
             display: "flex",
             alignItems: "center",
@@ -33,12 +37,14 @@ export default function WatchlistPage() {
             fontWeight: 600,
             fontSize: "0.85rem",
             cursor: "pointer",
+            border: "none",
           }}
         >
           <AddCircleOutline style={{ fontSize: "1rem" }} />
           추가
         </button>
       </div>
+      <MarketIndexBar />
 
       <div style={{ padding: "1.5rem 1rem" }}>
         {!isLoggedIn ? (
@@ -91,6 +97,7 @@ export default function WatchlistPage() {
               종목을 추가하면 뉴스와 목표가 변경을 알려드려요
             </p>
             <button
+              onClick={() => router.push("/search")}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -102,6 +109,7 @@ export default function WatchlistPage() {
                 fontWeight: 700,
                 fontSize: "0.9rem",
                 cursor: "pointer",
+                border: "none",
               }}
             >
               <AddCircleOutline style={{ fontSize: "1.1rem" }} />
